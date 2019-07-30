@@ -1,0 +1,685 @@
+   1               		.file	"cmd_waterpump.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               		.section	.text.cmd_waterpump,"ax",@progbits
+  11               	.global	cmd_waterpump
+  13               	cmd_waterpump:
+  14               	.LFB9:
+  15               		.file 1 "apps/modules/cmd_waterpump.c"
+   1:apps/modules/cmd_waterpump.c **** /***************************************************************************
+   2:apps/modules/cmd_waterpump.c ****  *            cmd_adx.c
+   3:apps/modules/cmd_waterpump.c ****  *
+   4:apps/modules/cmd_waterpump.c ****  *  Thu Nov  5 17:02:56 2009
+   5:apps/modules/cmd_waterpump.c ****  *  Copyright  2009  Dirk Broßwick
+   6:apps/modules/cmd_waterpump.c ****  *  <sharandac@snafu.de>
+   7:apps/modules/cmd_waterpump.c ****  ****************************************************************************/
+   8:apps/modules/cmd_waterpump.c **** /*
+   9:apps/modules/cmd_waterpump.c ****  * This program is free software; you can redistribute it and/or modify
+  10:apps/modules/cmd_waterpump.c ****  * it under the terms of the GNU General Public License as published by
+  11:apps/modules/cmd_waterpump.c ****  * the Free Software Foundation; either version 2 of the License, or
+  12:apps/modules/cmd_waterpump.c ****  * (at your option) any later version.
+  13:apps/modules/cmd_waterpump.c ****  * 
+  14:apps/modules/cmd_waterpump.c ****  * This program is distributed in the hope that it will be useful,
+  15:apps/modules/cmd_waterpump.c ****  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  16:apps/modules/cmd_waterpump.c ****  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  17:apps/modules/cmd_waterpump.c ****  * GNU Library General Public License for more details.
+  18:apps/modules/cmd_waterpump.c ****  * 
+  19:apps/modules/cmd_waterpump.c ****  * You should have received a copy of the GNU General Public License
+  20:apps/modules/cmd_waterpump.c ****  * along with this program; if not, write to the Free Software
+  21:apps/modules/cmd_waterpump.c ****  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
+  22:apps/modules/cmd_waterpump.c ****  */
+  23:apps/modules/cmd_waterpump.c **** 
+  24:apps/modules/cmd_waterpump.c **** /**
+  25:apps/modules/cmd_waterpump.c ****  * \ingroup modules
+  26:apps/modules/cmd_waterpump.c ****  * \addtogroup cmd_adc Shell- und CGI-Interface um fuer den adc (cmd_adc.c)
+  27:apps/modules/cmd_waterpump.c ****  *
+  28:apps/modules/cmd_waterpump.c ****  * @{
+  29:apps/modules/cmd_waterpump.c ****  */
+  30:apps/modules/cmd_waterpump.c **** 
+  31:apps/modules/cmd_waterpump.c **** /**
+  32:apps/modules/cmd_waterpump.c ****  * \file
+  33:apps/modules/cmd_waterpump.c ****  *
+  34:apps/modules/cmd_waterpump.c ****  */
+  35:apps/modules/cmd_waterpump.c ****  
+  36:apps/modules/cmd_waterpump.c **** #include <avr/pgmspace.h>
+  37:apps/modules/cmd_waterpump.c **** #include <avr/version.h>
+  38:apps/modules/cmd_waterpump.c **** #include <avr/eeprom.h>
+  39:apps/modules/cmd_waterpump.c **** #include <util/delay.h>
+  40:apps/modules/cmd_waterpump.c **** #include <stdio.h>
+  41:apps/modules/cmd_waterpump.c **** #include <string.h>
+  42:apps/modules/cmd_waterpump.c **** #include <stdlib.h>
+  43:apps/modules/cmd_waterpump.c **** #include <math.h>
+  44:apps/modules/cmd_waterpump.c **** 
+  45:apps/modules/cmd_waterpump.c **** #include "config.h"
+  46:apps/modules/cmd_waterpump.c **** 
+  47:apps/modules/cmd_waterpump.c **** #if defined(ANALOG) 
+  48:apps/modules/cmd_waterpump.c **** 
+  49:apps/modules/cmd_waterpump.c **** #include "hardware/adc/adc.h"
+  50:apps/modules/cmd_waterpump.c **** #include "hardware/gpio/gpio_out.h"
+  51:apps/modules/cmd_waterpump.c **** #include "system/config/eeconfig.h"
+  52:apps/modules/cmd_waterpump.c **** 
+  53:apps/modules/cmd_waterpump.c **** #include "system/shell/shell.h"
+  54:apps/modules/cmd_waterpump.c **** #include "cmd_waterpump.h"
+  55:apps/modules/cmd_waterpump.c **** 
+  56:apps/modules/cmd_waterpump.c **** const char WATERPUMP_P[] PROGMEM = { "WATERPUMP" };
+  57:apps/modules/cmd_waterpump.c **** 
+  58:apps/modules/cmd_waterpump.c **** void init_cmd_waterpump( void )
+  59:apps/modules/cmd_waterpump.c **** {
+  60:apps/modules/cmd_waterpump.c **** #if defined(SHELL)
+  61:apps/modules/cmd_waterpump.c **** 	SHELL_RegisterCMD( cmd_waterpump, PSTR("waterpump") );
+  62:apps/modules/cmd_waterpump.c **** #endif
+  63:apps/modules/cmd_waterpump.c **** }
+  64:apps/modules/cmd_waterpump.c **** 
+  65:apps/modules/cmd_waterpump.c **** int cmd_waterpump( int argc, char ** argv )
+  66:apps/modules/cmd_waterpump.c **** {
+  16               		.loc 1 66 0
+  17               		.cfi_startproc
+  18               	.LVL0:
+  19 0000 A0E1      		ldi r26,lo8(16)
+  20 0002 B0E0      		ldi r27,0
+  21 0004 E0E0      		ldi r30,lo8(gs(1f))
+  22 0006 F0E0      		ldi r31,hi8(gs(1f))
+  23 0008 0C94 0000 		jmp __prologue_saves__+((18 - 8) * 2)
+  24               	1:
+  25               	.LCFI0:
+  26               		.cfi_offset 12, -2
+  27               		.cfi_offset 13, -3
+  28               		.cfi_offset 14, -4
+  29               		.cfi_offset 15, -5
+  30               		.cfi_offset 16, -6
+  31               		.cfi_offset 17, -7
+  32               		.cfi_offset 28, -8
+  33               		.cfi_offset 29, -9
+  34               		.cfi_def_cfa 28, 26
+  35               	/* prologue: function */
+  36               	/* frame size = 16 */
+  37               	/* stack size = 24 */
+  38               	.L__stack_usage = 24
+  39 000c 6C01      		movw r12,r24
+  40               	.LVL1:
+  67:apps/modules/cmd_waterpump.c **** 	char string[16];
+  68:apps/modules/cmd_waterpump.c **** 	int trigger=512,temp=0,res=0;
+  69:apps/modules/cmd_waterpump.c **** 
+  70:apps/modules/cmd_waterpump.c **** 	if ( readConfig_P( WATERPUMP_P, string ) != -1 )
+  41               		.loc 1 70 0
+  42 000e BE01      		movw r22,r28
+  43               	.LVL2:
+  44 0010 6F5F      		subi r22,-1
+  45 0012 7F4F      		sbci r23,-1
+  46 0014 80E0      		ldi r24,lo8(WATERPUMP_P)
+  47 0016 90E0      		ldi r25,hi8(WATERPUMP_P)
+  48               	.LVL3:
+  49 0018 0E94 0000 		call readConfig_P
+  50               	.LVL4:
+  51 001c 0196      		adiw r24,1
+  52 001e 01F0      		breq .L9
+  71:apps/modules/cmd_waterpump.c **** 		trigger = atoi( string );
+  53               		.loc 1 71 0
+  54 0020 CE01      		movw r24,r28
+  55 0022 0196      		adiw r24,1
+  56 0024 0E94 0000 		call atoi
+  57               	.LVL5:
+  58 0028 8C01      		movw r16,r24
+  59               	.LVL6:
+  60 002a 00C0      		rjmp .L2
+  61               	.LVL7:
+  62               	.L9:
+  68:apps/modules/cmd_waterpump.c **** 	int trigger=512,temp=0,res=0;
+  63               		.loc 1 68 0
+  64 002c 00E0      		ldi r16,0
+  65 002e 12E0      		ldi r17,lo8(2)
+  66               	.LVL8:
+  67               	.L2:
+  72:apps/modules/cmd_waterpump.c **** 	
+  73:apps/modules/cmd_waterpump.c **** 	GPIO_out_set( 9 );
+  68               		.loc 1 73 0
+  69 0030 89E0      		ldi r24,lo8(9)
+  70 0032 0E94 0000 		call GPIO_out_set
+  71               	.LVL9:
+  72 0036 20E1      		ldi r18,lo8(16)
+  73 0038 37E2      		ldi r19,lo8(39)
+  74               	.LVL10:
+  75               	.L4:
+  76               	.LBB21:
+  77               	.LBB22:
+  78               	.LBB23:
+  79               	.LBB24:
+  80               		.file 2 "/usr/lib/avr/include/util/delay_basic.h"
+   1:/usr/lib/avr/include/util/delay_basic.h **** /* Copyright (c) 2002, Marek Michalkiewicz
+   2:/usr/lib/avr/include/util/delay_basic.h ****    Copyright (c) 2007 Joerg Wunsch
+   3:/usr/lib/avr/include/util/delay_basic.h ****    All rights reserved.
+   4:/usr/lib/avr/include/util/delay_basic.h **** 
+   5:/usr/lib/avr/include/util/delay_basic.h ****    Redistribution and use in source and binary forms, with or without
+   6:/usr/lib/avr/include/util/delay_basic.h ****    modification, are permitted provided that the following conditions are met:
+   7:/usr/lib/avr/include/util/delay_basic.h **** 
+   8:/usr/lib/avr/include/util/delay_basic.h ****    * Redistributions of source code must retain the above copyright
+   9:/usr/lib/avr/include/util/delay_basic.h ****      notice, this list of conditions and the following disclaimer.
+  10:/usr/lib/avr/include/util/delay_basic.h **** 
+  11:/usr/lib/avr/include/util/delay_basic.h ****    * Redistributions in binary form must reproduce the above copyright
+  12:/usr/lib/avr/include/util/delay_basic.h ****      notice, this list of conditions and the following disclaimer in
+  13:/usr/lib/avr/include/util/delay_basic.h ****      the documentation and/or other materials provided with the
+  14:/usr/lib/avr/include/util/delay_basic.h ****      distribution.
+  15:/usr/lib/avr/include/util/delay_basic.h **** 
+  16:/usr/lib/avr/include/util/delay_basic.h ****    * Neither the name of the copyright holders nor the names of
+  17:/usr/lib/avr/include/util/delay_basic.h ****      contributors may be used to endorse or promote products derived
+  18:/usr/lib/avr/include/util/delay_basic.h ****      from this software without specific prior written permission.
+  19:/usr/lib/avr/include/util/delay_basic.h **** 
+  20:/usr/lib/avr/include/util/delay_basic.h ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  21:/usr/lib/avr/include/util/delay_basic.h ****   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  22:/usr/lib/avr/include/util/delay_basic.h ****   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  23:/usr/lib/avr/include/util/delay_basic.h ****   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  24:/usr/lib/avr/include/util/delay_basic.h ****   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  25:/usr/lib/avr/include/util/delay_basic.h ****   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  26:/usr/lib/avr/include/util/delay_basic.h ****   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  27:/usr/lib/avr/include/util/delay_basic.h ****   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  28:/usr/lib/avr/include/util/delay_basic.h ****   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  29:/usr/lib/avr/include/util/delay_basic.h ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  30:/usr/lib/avr/include/util/delay_basic.h ****   POSSIBILITY OF SUCH DAMAGE. */
+  31:/usr/lib/avr/include/util/delay_basic.h **** 
+  32:/usr/lib/avr/include/util/delay_basic.h **** /* $Id: delay_basic.h 2143 2010-06-08 21:19:51Z joerg_wunsch $ */
+  33:/usr/lib/avr/include/util/delay_basic.h **** 
+  34:/usr/lib/avr/include/util/delay_basic.h **** #ifndef _UTIL_DELAY_BASIC_H_
+  35:/usr/lib/avr/include/util/delay_basic.h **** #define _UTIL_DELAY_BASIC_H_ 1
+  36:/usr/lib/avr/include/util/delay_basic.h **** 
+  37:/usr/lib/avr/include/util/delay_basic.h **** #include <inttypes.h>
+  38:/usr/lib/avr/include/util/delay_basic.h **** 
+  39:/usr/lib/avr/include/util/delay_basic.h **** #if !defined(__DOXYGEN__)
+  40:/usr/lib/avr/include/util/delay_basic.h **** static inline void _delay_loop_1(uint8_t __count) __attribute__((always_inline));
+  41:/usr/lib/avr/include/util/delay_basic.h **** static inline void _delay_loop_2(uint16_t __count) __attribute__((always_inline));
+  42:/usr/lib/avr/include/util/delay_basic.h **** #endif
+  43:/usr/lib/avr/include/util/delay_basic.h **** 
+  44:/usr/lib/avr/include/util/delay_basic.h **** /** \file */
+  45:/usr/lib/avr/include/util/delay_basic.h **** /** \defgroup util_delay_basic <util/delay_basic.h>: Basic busy-wait delay loops
+  46:/usr/lib/avr/include/util/delay_basic.h ****     \code
+  47:/usr/lib/avr/include/util/delay_basic.h ****     #include <util/delay_basic.h>
+  48:/usr/lib/avr/include/util/delay_basic.h ****     \endcode
+  49:/usr/lib/avr/include/util/delay_basic.h **** 
+  50:/usr/lib/avr/include/util/delay_basic.h ****     The functions in this header file implement simple delay loops
+  51:/usr/lib/avr/include/util/delay_basic.h ****     that perform a busy-waiting.  They are typically used to
+  52:/usr/lib/avr/include/util/delay_basic.h ****     facilitate short delays in the program execution.  They are
+  53:/usr/lib/avr/include/util/delay_basic.h ****     implemented as count-down loops with a well-known CPU cycle
+  54:/usr/lib/avr/include/util/delay_basic.h ****     count per loop iteration.  As such, no other processing can
+  55:/usr/lib/avr/include/util/delay_basic.h ****     occur simultaneously.  It should be kept in mind that the
+  56:/usr/lib/avr/include/util/delay_basic.h ****     functions described here do not disable interrupts.
+  57:/usr/lib/avr/include/util/delay_basic.h **** 
+  58:/usr/lib/avr/include/util/delay_basic.h ****     In general, for long delays, the use of hardware timers is
+  59:/usr/lib/avr/include/util/delay_basic.h ****     much preferrable, as they free the CPU, and allow for
+  60:/usr/lib/avr/include/util/delay_basic.h ****     concurrent processing of other events while the timer is
+  61:/usr/lib/avr/include/util/delay_basic.h ****     running.  However, in particular for very short delays, the
+  62:/usr/lib/avr/include/util/delay_basic.h ****     overhead of setting up a hardware timer is too much compared
+  63:/usr/lib/avr/include/util/delay_basic.h ****     to the overall delay time.
+  64:/usr/lib/avr/include/util/delay_basic.h **** 
+  65:/usr/lib/avr/include/util/delay_basic.h ****     Two inline functions are provided for the actual delay algorithms.
+  66:/usr/lib/avr/include/util/delay_basic.h **** 
+  67:/usr/lib/avr/include/util/delay_basic.h **** */
+  68:/usr/lib/avr/include/util/delay_basic.h **** 
+  69:/usr/lib/avr/include/util/delay_basic.h **** /** \ingroup util_delay_basic
+  70:/usr/lib/avr/include/util/delay_basic.h **** 
+  71:/usr/lib/avr/include/util/delay_basic.h ****     Delay loop using an 8-bit counter \c __count, so up to 256
+  72:/usr/lib/avr/include/util/delay_basic.h ****     iterations are possible.  (The value 256 would have to be passed
+  73:/usr/lib/avr/include/util/delay_basic.h ****     as 0.)  The loop executes three CPU cycles per iteration, not
+  74:/usr/lib/avr/include/util/delay_basic.h ****     including the overhead the compiler needs to setup the counter
+  75:/usr/lib/avr/include/util/delay_basic.h ****     register.
+  76:/usr/lib/avr/include/util/delay_basic.h **** 
+  77:/usr/lib/avr/include/util/delay_basic.h ****     Thus, at a CPU speed of 1 MHz, delays of up to 768 microseconds
+  78:/usr/lib/avr/include/util/delay_basic.h ****     can be achieved.
+  79:/usr/lib/avr/include/util/delay_basic.h **** */
+  80:/usr/lib/avr/include/util/delay_basic.h **** void
+  81:/usr/lib/avr/include/util/delay_basic.h **** _delay_loop_1(uint8_t __count)
+  82:/usr/lib/avr/include/util/delay_basic.h **** {
+  83:/usr/lib/avr/include/util/delay_basic.h **** 	__asm__ volatile (
+  84:/usr/lib/avr/include/util/delay_basic.h **** 		"1: dec %0" "\n\t"
+  85:/usr/lib/avr/include/util/delay_basic.h **** 		"brne 1b"
+  86:/usr/lib/avr/include/util/delay_basic.h **** 		: "=r" (__count)
+  87:/usr/lib/avr/include/util/delay_basic.h **** 		: "0" (__count)
+  88:/usr/lib/avr/include/util/delay_basic.h **** 	);
+  89:/usr/lib/avr/include/util/delay_basic.h **** }
+  90:/usr/lib/avr/include/util/delay_basic.h **** 
+  91:/usr/lib/avr/include/util/delay_basic.h **** /** \ingroup util_delay_basic
+  92:/usr/lib/avr/include/util/delay_basic.h **** 
+  93:/usr/lib/avr/include/util/delay_basic.h ****     Delay loop using a 16-bit counter \c __count, so up to 65536
+  94:/usr/lib/avr/include/util/delay_basic.h ****     iterations are possible.  (The value 65536 would have to be
+  95:/usr/lib/avr/include/util/delay_basic.h ****     passed as 0.)  The loop executes four CPU cycles per iteration,
+  96:/usr/lib/avr/include/util/delay_basic.h ****     not including the overhead the compiler requires to setup the
+  97:/usr/lib/avr/include/util/delay_basic.h ****     counter register pair.
+  98:/usr/lib/avr/include/util/delay_basic.h **** 
+  99:/usr/lib/avr/include/util/delay_basic.h ****     Thus, at a CPU speed of 1 MHz, delays of up to about 262.1
+ 100:/usr/lib/avr/include/util/delay_basic.h ****     milliseconds can be achieved.
+ 101:/usr/lib/avr/include/util/delay_basic.h ****  */
+ 102:/usr/lib/avr/include/util/delay_basic.h **** void
+ 103:/usr/lib/avr/include/util/delay_basic.h **** _delay_loop_2(uint16_t __count)
+ 104:/usr/lib/avr/include/util/delay_basic.h **** {
+ 105:/usr/lib/avr/include/util/delay_basic.h **** 	__asm__ volatile (
+  81               		.loc 2 105 0
+  82 003a 80E9      		ldi r24,lo8(-112)
+  83 003c 91E0      		ldi r25,lo8(1)
+  84               	/* #APP */
+  85               	 ;  105 "/usr/lib/avr/include/util/delay_basic.h" 1
+  86 003e 0197      		1: sbiw r24,1
+  87 0040 01F4      		brne 1b
+  88               	 ;  0 "" 2
+  89               	.LVL11:
+  90               	/* #NOAPP */
+  91 0042 2150      		subi r18,1
+  92 0044 3109      		sbc r19,__zero_reg__
+  93               	.LVL12:
+  94               	.LBE24:
+  95               	.LBE23:
+  96               		.file 3 "/usr/lib/avr/include/util/delay.h"
+   1:/usr/lib/avr/include/util/delay.h **** /* Copyright (c) 2002, Marek Michalkiewicz
+   2:/usr/lib/avr/include/util/delay.h ****    Copyright (c) 2004,2005,2007 Joerg Wunsch
+   3:/usr/lib/avr/include/util/delay.h ****    Copyright (c) 2007  Florin-Viorel Petrov
+   4:/usr/lib/avr/include/util/delay.h ****    All rights reserved.
+   5:/usr/lib/avr/include/util/delay.h **** 
+   6:/usr/lib/avr/include/util/delay.h ****    Redistribution and use in source and binary forms, with or without
+   7:/usr/lib/avr/include/util/delay.h ****    modification, are permitted provided that the following conditions are met:
+   8:/usr/lib/avr/include/util/delay.h **** 
+   9:/usr/lib/avr/include/util/delay.h ****    * Redistributions of source code must retain the above copyright
+  10:/usr/lib/avr/include/util/delay.h ****      notice, this list of conditions and the following disclaimer.
+  11:/usr/lib/avr/include/util/delay.h **** 
+  12:/usr/lib/avr/include/util/delay.h ****    * Redistributions in binary form must reproduce the above copyright
+  13:/usr/lib/avr/include/util/delay.h ****      notice, this list of conditions and the following disclaimer in
+  14:/usr/lib/avr/include/util/delay.h ****      the documentation and/or other materials provided with the
+  15:/usr/lib/avr/include/util/delay.h ****      distribution.
+  16:/usr/lib/avr/include/util/delay.h **** 
+  17:/usr/lib/avr/include/util/delay.h ****    * Neither the name of the copyright holders nor the names of
+  18:/usr/lib/avr/include/util/delay.h ****      contributors may be used to endorse or promote products derived
+  19:/usr/lib/avr/include/util/delay.h ****      from this software without specific prior written permission.
+  20:/usr/lib/avr/include/util/delay.h **** 
+  21:/usr/lib/avr/include/util/delay.h ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  22:/usr/lib/avr/include/util/delay.h ****   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  23:/usr/lib/avr/include/util/delay.h ****   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  24:/usr/lib/avr/include/util/delay.h ****   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  25:/usr/lib/avr/include/util/delay.h ****   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  26:/usr/lib/avr/include/util/delay.h ****   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  27:/usr/lib/avr/include/util/delay.h ****   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  28:/usr/lib/avr/include/util/delay.h ****   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  29:/usr/lib/avr/include/util/delay.h ****   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  30:/usr/lib/avr/include/util/delay.h ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  31:/usr/lib/avr/include/util/delay.h ****   POSSIBILITY OF SUCH DAMAGE. */
+  32:/usr/lib/avr/include/util/delay.h **** 
+  33:/usr/lib/avr/include/util/delay.h **** /* $Id: delay.h.in 2251 2011-09-14 08:20:33Z joerg_wunsch $ */
+  34:/usr/lib/avr/include/util/delay.h **** 
+  35:/usr/lib/avr/include/util/delay.h **** #ifndef _UTIL_DELAY_H_
+  36:/usr/lib/avr/include/util/delay.h **** #define _UTIL_DELAY_H_ 1
+  37:/usr/lib/avr/include/util/delay.h **** 
+  38:/usr/lib/avr/include/util/delay.h **** #ifndef __HAS_DELAY_CYCLES
+  39:/usr/lib/avr/include/util/delay.h **** #define __HAS_DELAY_CYCLES 1
+  40:/usr/lib/avr/include/util/delay.h **** #endif
+  41:/usr/lib/avr/include/util/delay.h **** 
+  42:/usr/lib/avr/include/util/delay.h **** #include <inttypes.h>
+  43:/usr/lib/avr/include/util/delay.h **** #include <util/delay_basic.h>
+  44:/usr/lib/avr/include/util/delay.h **** #include <math.h>
+  45:/usr/lib/avr/include/util/delay.h **** 
+  46:/usr/lib/avr/include/util/delay.h **** /** \file */
+  47:/usr/lib/avr/include/util/delay.h **** /** \defgroup util_delay <util/delay.h>: Convenience functions for busy-wait delay loops
+  48:/usr/lib/avr/include/util/delay.h ****     \code
+  49:/usr/lib/avr/include/util/delay.h ****     #define F_CPU 1000000UL  // 1 MHz
+  50:/usr/lib/avr/include/util/delay.h ****     //#define F_CPU 14.7456E6
+  51:/usr/lib/avr/include/util/delay.h ****     #include <util/delay.h>
+  52:/usr/lib/avr/include/util/delay.h ****     \endcode
+  53:/usr/lib/avr/include/util/delay.h **** 
+  54:/usr/lib/avr/include/util/delay.h ****     \note As an alternative method, it is possible to pass the
+  55:/usr/lib/avr/include/util/delay.h ****     F_CPU macro down to the compiler from the Makefile.
+  56:/usr/lib/avr/include/util/delay.h ****     Obviously, in that case, no \c \#define statement should be
+  57:/usr/lib/avr/include/util/delay.h ****     used.
+  58:/usr/lib/avr/include/util/delay.h **** 
+  59:/usr/lib/avr/include/util/delay.h ****     The functions in this header file are wrappers around the basic
+  60:/usr/lib/avr/include/util/delay.h ****     busy-wait functions from <util/delay_basic.h>.  They are meant as
+  61:/usr/lib/avr/include/util/delay.h ****     convenience functions where actual time values can be specified
+  62:/usr/lib/avr/include/util/delay.h ****     rather than a number of cycles to wait for.  The idea behind is
+  63:/usr/lib/avr/include/util/delay.h ****     that compile-time constant expressions will be eliminated by
+  64:/usr/lib/avr/include/util/delay.h ****     compiler optimization so floating-point expressions can be used
+  65:/usr/lib/avr/include/util/delay.h ****     to calculate the number of delay cycles needed based on the CPU
+  66:/usr/lib/avr/include/util/delay.h ****     frequency passed by the macro F_CPU.
+  67:/usr/lib/avr/include/util/delay.h **** 
+  68:/usr/lib/avr/include/util/delay.h ****     \note In order for these functions to work as intended, compiler
+  69:/usr/lib/avr/include/util/delay.h ****     optimizations <em>must</em> be enabled, and the delay time
+  70:/usr/lib/avr/include/util/delay.h ****     <em>must</em> be an expression that is a known constant at
+  71:/usr/lib/avr/include/util/delay.h ****     compile-time.  If these requirements are not met, the resulting
+  72:/usr/lib/avr/include/util/delay.h ****     delay will be much longer (and basically unpredictable), and
+  73:/usr/lib/avr/include/util/delay.h ****     applications that otherwise do not use floating-point calculations
+  74:/usr/lib/avr/include/util/delay.h ****     will experience severe code bloat by the floating-point library
+  75:/usr/lib/avr/include/util/delay.h ****     routines linked into the application.
+  76:/usr/lib/avr/include/util/delay.h **** 
+  77:/usr/lib/avr/include/util/delay.h ****     The functions available allow the specification of microsecond, and
+  78:/usr/lib/avr/include/util/delay.h ****     millisecond delays directly, using the application-supplied macro
+  79:/usr/lib/avr/include/util/delay.h ****     F_CPU as the CPU clock frequency (in Hertz).
+  80:/usr/lib/avr/include/util/delay.h **** 
+  81:/usr/lib/avr/include/util/delay.h **** */
+  82:/usr/lib/avr/include/util/delay.h **** 
+  83:/usr/lib/avr/include/util/delay.h **** #if !defined(__DOXYGEN__)
+  84:/usr/lib/avr/include/util/delay.h **** static inline void _delay_us(double __us) __attribute__((always_inline));
+  85:/usr/lib/avr/include/util/delay.h **** static inline void _delay_ms(double __ms) __attribute__((always_inline));
+  86:/usr/lib/avr/include/util/delay.h **** #endif
+  87:/usr/lib/avr/include/util/delay.h **** 
+  88:/usr/lib/avr/include/util/delay.h **** #ifndef F_CPU
+  89:/usr/lib/avr/include/util/delay.h **** /* prevent compiler error by supplying a default */
+  90:/usr/lib/avr/include/util/delay.h **** # warning "F_CPU not defined for <util/delay.h>"
+  91:/usr/lib/avr/include/util/delay.h **** # define F_CPU 1000000UL
+  92:/usr/lib/avr/include/util/delay.h **** #endif
+  93:/usr/lib/avr/include/util/delay.h **** 
+  94:/usr/lib/avr/include/util/delay.h **** #ifndef __OPTIMIZE__
+  95:/usr/lib/avr/include/util/delay.h **** # warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+  96:/usr/lib/avr/include/util/delay.h **** #endif
+  97:/usr/lib/avr/include/util/delay.h **** 
+  98:/usr/lib/avr/include/util/delay.h **** #if __HAS_DELAY_CYCLES && defined(__OPTIMIZE__) && \
+  99:/usr/lib/avr/include/util/delay.h ****   !defined(__DELAY_BACKWARD_COMPATIBLE__) &&	   \
+ 100:/usr/lib/avr/include/util/delay.h ****   __STDC_HOSTED__
+ 101:/usr/lib/avr/include/util/delay.h **** #  include <math.h>
+ 102:/usr/lib/avr/include/util/delay.h **** #endif
+ 103:/usr/lib/avr/include/util/delay.h **** 
+ 104:/usr/lib/avr/include/util/delay.h **** /**
+ 105:/usr/lib/avr/include/util/delay.h ****    \ingroup util_delay
+ 106:/usr/lib/avr/include/util/delay.h **** 
+ 107:/usr/lib/avr/include/util/delay.h ****    Perform a delay of \c __ms milliseconds, using _delay_loop_2().
+ 108:/usr/lib/avr/include/util/delay.h **** 
+ 109:/usr/lib/avr/include/util/delay.h ****    The macro F_CPU is supposed to be defined to a
+ 110:/usr/lib/avr/include/util/delay.h ****    constant defining the CPU clock frequency (in Hertz).
+ 111:/usr/lib/avr/include/util/delay.h **** 
+ 112:/usr/lib/avr/include/util/delay.h ****    The maximal possible delay is 262.14 ms / F_CPU in MHz.
+ 113:/usr/lib/avr/include/util/delay.h **** 
+ 114:/usr/lib/avr/include/util/delay.h ****    When the user request delay which exceed the maximum possible one,
+ 115:/usr/lib/avr/include/util/delay.h ****    _delay_ms() provides a decreased resolution functionality. In this
+ 116:/usr/lib/avr/include/util/delay.h ****    mode _delay_ms() will work with a resolution of 1/10 ms, providing
+ 117:/usr/lib/avr/include/util/delay.h ****    delays up to 6.5535 seconds (independent from CPU frequency).  The
+ 118:/usr/lib/avr/include/util/delay.h ****    user will not be informed about decreased resolution.
+ 119:/usr/lib/avr/include/util/delay.h **** 
+ 120:/usr/lib/avr/include/util/delay.h ****    If the avr-gcc toolchain has __builtin_avr_delay_cycles(unsigned long)
+ 121:/usr/lib/avr/include/util/delay.h ****    support, maximal possible delay is 4294967.295 ms/ F_CPU in MHz. For
+ 122:/usr/lib/avr/include/util/delay.h ****    values greater than the maximal possible delay, overflows results in
+ 123:/usr/lib/avr/include/util/delay.h ****    no delay i.e., 0ms.
+ 124:/usr/lib/avr/include/util/delay.h **** 
+ 125:/usr/lib/avr/include/util/delay.h ****    Conversion of __us into clock cycles may not always result in integer.
+ 126:/usr/lib/avr/include/util/delay.h ****    By default, the clock cycles rounded up to next integer. This ensures that
+ 127:/usr/lib/avr/include/util/delay.h ****    the user gets atleast __us microseconds of delay.
+ 128:/usr/lib/avr/include/util/delay.h **** 
+ 129:/usr/lib/avr/include/util/delay.h ****    Alternatively, user can define __DELAY_ROUND_DOWN__ and __DELAY_ROUND_CLOSEST__
+ 130:/usr/lib/avr/include/util/delay.h ****    to round down and round to closest integer.
+ 131:/usr/lib/avr/include/util/delay.h **** 
+ 132:/usr/lib/avr/include/util/delay.h ****    Note: The new implementation of _delay_ms(double __ms) with 
+ 133:/usr/lib/avr/include/util/delay.h ****     __builtin_avr_delay_cycles(unsigned long) support is not backward compatible. 
+ 134:/usr/lib/avr/include/util/delay.h ****    User can define __DELAY_BACKWARD_COMPATIBLE__ to get a backward compatible delay.
+ 135:/usr/lib/avr/include/util/delay.h ****    Also, the backward compatible
+ 136:/usr/lib/avr/include/util/delay.h ****    algorithm will be chosen if the code is compiled in a <em>freestanding
+ 137:/usr/lib/avr/include/util/delay.h ****    environment</em> (GCC option \c -ffreestanding), as the math functions
+ 138:/usr/lib/avr/include/util/delay.h ****    required for rounding are not available to the compiler then.
+ 139:/usr/lib/avr/include/util/delay.h **** 
+ 140:/usr/lib/avr/include/util/delay.h ****  */
+ 141:/usr/lib/avr/include/util/delay.h **** void
+ 142:/usr/lib/avr/include/util/delay.h **** _delay_ms(double __ms)
+ 143:/usr/lib/avr/include/util/delay.h **** {
+ 144:/usr/lib/avr/include/util/delay.h **** 	uint16_t __ticks;
+ 145:/usr/lib/avr/include/util/delay.h **** 	double __tmp ; 
+ 146:/usr/lib/avr/include/util/delay.h **** #if __HAS_DELAY_CYCLES && defined(__OPTIMIZE__) && \
+ 147:/usr/lib/avr/include/util/delay.h ****   !defined(__DELAY_BACKWARD_COMPATIBLE__) &&	   \
+ 148:/usr/lib/avr/include/util/delay.h ****   __STDC_HOSTED__
+ 149:/usr/lib/avr/include/util/delay.h **** 	uint32_t __ticks_dc;
+ 150:/usr/lib/avr/include/util/delay.h **** 	extern void __builtin_avr_delay_cycles(unsigned long);
+ 151:/usr/lib/avr/include/util/delay.h **** 	__tmp = ((F_CPU) / 1e3) * __ms;
+ 152:/usr/lib/avr/include/util/delay.h **** 
+ 153:/usr/lib/avr/include/util/delay.h **** 	#if defined(__DELAY_ROUND_DOWN__)
+ 154:/usr/lib/avr/include/util/delay.h **** 		__ticks_dc = (uint32_t)fabs(__tmp);
+ 155:/usr/lib/avr/include/util/delay.h **** 
+ 156:/usr/lib/avr/include/util/delay.h **** 	#elif defined(__DELAY_ROUND_CLOSEST__)
+ 157:/usr/lib/avr/include/util/delay.h **** 		__ticks_dc = (uint32_t)(fabs(__tmp)+0.5);
+ 158:/usr/lib/avr/include/util/delay.h **** 
+ 159:/usr/lib/avr/include/util/delay.h **** 	#else
+ 160:/usr/lib/avr/include/util/delay.h **** 		//round up by default
+ 161:/usr/lib/avr/include/util/delay.h **** 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+ 162:/usr/lib/avr/include/util/delay.h **** 	#endif
+ 163:/usr/lib/avr/include/util/delay.h **** 
+ 164:/usr/lib/avr/include/util/delay.h **** 	__builtin_avr_delay_cycles(__ticks_dc);
+ 165:/usr/lib/avr/include/util/delay.h **** 
+ 166:/usr/lib/avr/include/util/delay.h **** #else
+ 167:/usr/lib/avr/include/util/delay.h **** 	__tmp = ((F_CPU) / 4e3) * __ms;
+ 168:/usr/lib/avr/include/util/delay.h **** 	if (__tmp < 1.0)
+ 169:/usr/lib/avr/include/util/delay.h **** 		__ticks = 1;
+ 170:/usr/lib/avr/include/util/delay.h **** 	else if (__tmp > 65535)
+ 171:/usr/lib/avr/include/util/delay.h **** 	{
+ 172:/usr/lib/avr/include/util/delay.h **** 		//	__ticks = requested delay in 1/10 ms
+ 173:/usr/lib/avr/include/util/delay.h **** 		__ticks = (uint16_t) (__ms * 10.0);
+ 174:/usr/lib/avr/include/util/delay.h **** 		while(__ticks)
+  97               		.loc 3 174 0
+  98 0046 2115      		cp r18,__zero_reg__
+  99 0048 3105      		cpc r19,__zero_reg__
+ 100 004a 01F4      		brne .L4
+ 101               	.LBE22:
+ 102               	.LBE21:
+  74:apps/modules/cmd_waterpump.c **** 	_delay_ms(1000);
+  75:apps/modules/cmd_waterpump.c **** 	res = ADC_GetValue( 7 );
+ 103               		.loc 1 75 0
+ 104 004c 87E0      		ldi r24,lo8(7)
+ 105 004e 0E94 0000 		call ADC_GetValue
+ 106               	.LVL13:
+ 107 0052 7C01      		movw r14,r24
+ 108               	.LVL14:
+  76:apps/modules/cmd_waterpump.c **** 	GPIO_out_clear( 9 );
+ 109               		.loc 1 76 0
+ 110 0054 89E0      		ldi r24,lo8(9)
+ 111 0056 0E94 0000 		call GPIO_out_clear
+ 112               	.LVL15:
+  77:apps/modules/cmd_waterpump.c **** 
+  78:apps/modules/cmd_waterpump.c **** 	temp = ADC_mVolt( res + 1 , 5000 );
+ 113               		.loc 1 78 0
+ 114 005a 68E8      		ldi r22,lo8(-120)
+ 115 005c 73E1      		ldi r23,lo8(19)
+ 116 005e C701      		movw r24,r14
+ 117 0060 0196      		adiw r24,1
+ 118 0062 0E94 0000 		call ADC_mVolt
+ 119               	.LVL16:
+  79:apps/modules/cmd_waterpump.c **** 	printf_P(PSTR("Messwert: %d, V=%d.%03dVolt, trigger bei %d).\r\n"),res,temp / 1000, temp % 1000, t
+ 120               		.loc 1 79 0
+ 121 0066 1F93      		push r17
+ 122 0068 0F93      		push r16
+ 123 006a 68EE      		ldi r22,lo8(-24)
+ 124 006c 73E0      		ldi r23,lo8(3)
+ 125 006e 0E94 0000 		call __divmodhi4
+ 126               	.LVL17:
+ 127 0072 9F93      		push r25
+ 128 0074 8F93      		push r24
+ 129 0076 7F93      		push r23
+ 130 0078 6F93      		push r22
+ 131 007a FF92      		push r15
+ 132 007c EF92      		push r14
+ 133 007e 20E0      		ldi r18,lo8(__c.1862)
+ 134 0080 30E0      		ldi r19,hi8(__c.1862)
+ 135 0082 3F93      		push r19
+ 136 0084 2F93      		push r18
+ 137 0086 0E94 0000 		call printf_P
+ 138               	.LVL18:
+  80:apps/modules/cmd_waterpump.c **** 
+  81:apps/modules/cmd_waterpump.c **** 	if( argc <= 1 )
+ 139               		.loc 1 81 0
+ 140 008a 0FB6      		in __tmp_reg__,__SREG__
+ 141 008c F894      		cli
+ 142 008e DEBF      		out __SP_H__,r29
+ 143 0090 0FBE      		out __SREG__,__tmp_reg__
+ 144 0092 CDBF      		out __SP_L__,r28
+ 145 0094 92E0      		ldi r25,2
+ 146 0096 C916      		cp r12,r25
+ 147 0098 D104      		cpc r13,__zero_reg__
+ 148 009a 04F4      		brge .L5
+  82:apps/modules/cmd_waterpump.c **** 	{
+  83:apps/modules/cmd_waterpump.c **** 		if ( res > trigger )
+ 149               		.loc 1 83 0
+ 150 009c 0E15      		cp r16,r14
+ 151 009e 1F05      		cpc r17,r15
+ 152 00a0 04F4      		brge .L6
+  84:apps/modules/cmd_waterpump.c **** 		{
+  85:apps/modules/cmd_waterpump.c **** 			printf_P(PSTR("Pumpe ein für 5sek.\r\n"));
+ 153               		.loc 1 85 0
+ 154 00a2 80E0      		ldi r24,lo8(__c.1864)
+ 155 00a4 90E0      		ldi r25,hi8(__c.1864)
+ 156 00a6 9F93      		push r25
+ 157 00a8 8F93      		push r24
+ 158 00aa 0E94 0000 		call printf_P
+ 159               	.LVL19:
+  86:apps/modules/cmd_waterpump.c **** 			GPIO_out_set( 8 );
+ 160               		.loc 1 86 0
+ 161 00ae 88E0      		ldi r24,lo8(8)
+ 162 00b0 0E94 0000 		call GPIO_out_set
+ 163               	.LVL20:
+ 164 00b4 0F90      		pop __tmp_reg__
+ 165 00b6 0F90      		pop __tmp_reg__
+ 166 00b8 80E5      		ldi r24,lo8(80)
+ 167 00ba 93EC      		ldi r25,lo8(-61)
+ 168               	.LVL21:
+ 169               	.L8:
+ 170               	.LBB25:
+ 171               	.LBB26:
+ 172               	.LBB27:
+ 173               	.LBB28:
+ 174               		.loc 2 105 0
+ 175 00bc E0E9      		ldi r30,lo8(-112)
+ 176 00be F1E0      		ldi r31,lo8(1)
+ 177               	/* #APP */
+ 178               	 ;  105 "/usr/lib/avr/include/util/delay_basic.h" 1
+ 179 00c0 3197      		1: sbiw r30,1
+ 180 00c2 01F4      		brne 1b
+ 181               	 ;  0 "" 2
+ 182               	.LVL22:
+ 183               	/* #NOAPP */
+ 184 00c4 0197      		sbiw r24,1
+ 185               	.LVL23:
+ 186               	.LBE28:
+ 187               	.LBE27:
+ 188               		.loc 3 174 0
+ 189 00c6 0097      		sbiw r24,0
+ 190 00c8 01F4      		brne .L8
+ 191               	.LBE26:
+ 192               	.LBE25:
+  87:apps/modules/cmd_waterpump.c **** 			_delay_ms(5000);
+  88:apps/modules/cmd_waterpump.c **** 			GPIO_out_clear( 8 );
+ 193               		.loc 1 88 0
+ 194 00ca 88E0      		ldi r24,lo8(8)
+ 195               	.LVL24:
+ 196 00cc 0E94 0000 		call GPIO_out_clear
+ 197               	.LVL25:
+ 198 00d0 00C0      		rjmp .L5
+ 199               	.LVL26:
+ 200               	.L6:
+  89:apps/modules/cmd_waterpump.c **** 		}
+  90:apps/modules/cmd_waterpump.c **** 		else
+  91:apps/modules/cmd_waterpump.c **** 		{
+  92:apps/modules/cmd_waterpump.c **** 			printf_P(PSTR("Kein Wasser nötig.\r\n"));
+ 201               		.loc 1 92 0
+ 202 00d2 80E0      		ldi r24,lo8(__c.1866)
+ 203 00d4 90E0      		ldi r25,hi8(__c.1866)
+ 204 00d6 9F93      		push r25
+ 205 00d8 8F93      		push r24
+ 206 00da 0E94 0000 		call printf_P
+ 207               	.LVL27:
+ 208 00de 0F90      		pop __tmp_reg__
+ 209 00e0 0F90      		pop __tmp_reg__
+ 210               	.L5:
+  93:apps/modules/cmd_waterpump.c **** 		}
+  94:apps/modules/cmd_waterpump.c **** 	}
+  95:apps/modules/cmd_waterpump.c **** 	
+  96:apps/modules/cmd_waterpump.c **** 	return(0);
+  97:apps/modules/cmd_waterpump.c **** }
+ 211               		.loc 1 97 0
+ 212 00e2 80E0      		ldi r24,0
+ 213 00e4 90E0      		ldi r25,0
+ 214               	/* epilogue start */
+ 215 00e6 6096      		adiw r28,16
+ 216 00e8 E8E0      		ldi r30, lo8(8)
+ 217 00ea 0C94 0000 		jmp __epilogue_restores__ + ((18 - 8) * 2)
+ 218               		.cfi_endproc
+ 219               	.LFE9:
+ 221               		.section	.text.init_cmd_waterpump,"ax",@progbits
+ 222               	.global	init_cmd_waterpump
+ 224               	init_cmd_waterpump:
+ 225               	.LFB8:
+  59:apps/modules/cmd_waterpump.c **** {
+ 226               		.loc 1 59 0
+ 227               		.cfi_startproc
+ 228               	/* prologue: function */
+ 229               	/* frame size = 0 */
+ 230               	/* stack size = 0 */
+ 231               	.L__stack_usage = 0
+  61:apps/modules/cmd_waterpump.c **** 	SHELL_RegisterCMD( cmd_waterpump, PSTR("waterpump") );
+ 232               		.loc 1 61 0
+ 233 0000 60E0      		ldi r22,lo8(__c.1852)
+ 234 0002 70E0      		ldi r23,hi8(__c.1852)
+ 235 0004 80E0      		ldi r24,lo8(gs(cmd_waterpump))
+ 236 0006 90E0      		ldi r25,hi8(gs(cmd_waterpump))
+ 237 0008 0E94 0000 		call SHELL_RegisterCMD
+ 238               	.LVL28:
+ 239 000c 0895      		ret
+ 240               		.cfi_endproc
+ 241               	.LFE8:
+ 243               		.section	.progmem.data.__c.1866,"a",@progbits
+ 246               	__c.1866:
+ 247 0000 4B65 696E 		.string	"Kein Wasser n\303\266tig.\r\n"
+ 247      2057 6173 
+ 247      7365 7220 
+ 247      6EC3 B674 
+ 247      6967 2E0D 
+ 248               		.section	.progmem.data.__c.1864,"a",@progbits
+ 251               	__c.1864:
+ 252 0000 5075 6D70 		.string	"Pumpe ein f\303\274r 5sek.\r\n"
+ 252      6520 6569 
+ 252      6E20 66C3 
+ 252      BC72 2035 
+ 252      7365 6B2E 
+ 253               		.section	.progmem.data.__c.1862,"a",@progbits
+ 256               	__c.1862:
+ 257 0000 4D65 7373 		.string	"Messwert: %d, V=%d.%03dVolt, trigger bei %d).\r\n"
+ 257      7765 7274 
+ 257      3A20 2564 
+ 257      2C20 563D 
+ 257      2564 2E25 
+ 258               		.section	.progmem.data.__c.1852,"a",@progbits
+ 261               	__c.1852:
+ 262 0000 7761 7465 		.string	"waterpump"
+ 262      7270 756D 
+ 262      7000 
+ 263               	.global	WATERPUMP_P
+ 264               		.section	.progmem.data.WATERPUMP_P,"a",@progbits
+ 267               	WATERPUMP_P:
+ 268 0000 5741 5445 		.string	"WATERPUMP"
+ 268      5250 554D 
+ 268      5000 
+ 269               		.text
+ 270               	.Letext0:
+ 271               		.file 4 "/usr/lib/gcc/avr/4.8.2/include/stdint-gcc.h"
+ 272               		.file 5 "./system/shell/shell.h"
+ 273               		.file 6 "./system/config/eeconfig.h"
+ 274               		.file 7 "/usr/lib/avr/include/stdlib.h"
+ 275               		.file 8 "./hardware/adc/adc.h"
+ 276               		.file 9 "./hardware/gpio/gpio_out.h"
+ 277               		.file 10 "/usr/lib/avr/include/stdio.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 cmd_waterpump.c
+     /tmp/cc7ye1mJ.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cc7ye1mJ.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cc7ye1mJ.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cc7ye1mJ.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cc7ye1mJ.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cc7ye1mJ.s:13     .text.cmd_waterpump:0000000000000000 cmd_waterpump
+     /tmp/cc7ye1mJ.s:267    .progmem.data.WATERPUMP_P:0000000000000000 WATERPUMP_P
+     /tmp/cc7ye1mJ.s:256    .progmem.data.__c.1862:0000000000000000 __c.1862
+     /tmp/cc7ye1mJ.s:251    .progmem.data.__c.1864:0000000000000000 __c.1864
+     /tmp/cc7ye1mJ.s:246    .progmem.data.__c.1866:0000000000000000 __c.1866
+     /tmp/cc7ye1mJ.s:224    .text.init_cmd_waterpump:0000000000000000 init_cmd_waterpump
+     /tmp/cc7ye1mJ.s:261    .progmem.data.__c.1852:0000000000000000 __c.1852
+
+UNDEFINED SYMBOLS
+__prologue_saves__
+readConfig_P
+atoi
+GPIO_out_set
+ADC_GetValue
+GPIO_out_clear
+ADC_mVolt
+__divmodhi4
+printf_P
+__epilogue_restores__
+SHELL_RegisterCMD

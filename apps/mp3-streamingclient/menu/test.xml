@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<MenuConfig Xsize="128" Ysize="64" compact="0" languages="1" multilang="0">
+  <window number="1" focusNextKey="97" focusPrevKey="115" focusEnterKey="13">
+    <button Xpos="11" Ypos="18" font="0" text="Stream" Xsize="49" Ysize="11" action="" number="1" screen="window 4" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <button Xpos="67" Ypos="18" font="0" text="Setup" Xsize="49" Ysize="11" action="" number="2" screen="window 5" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <button Xpos="11" Ypos="33" font="0" text="Tools" Xsize="49" Ysize="11" action="" number="3" screen="window 18" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <button Xpos="67" Ypos="33" font="0" text="Info" Xsize="49" Ysize="11" action="" number="4" screen="window 2" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <label Xpos="40" Ypos="3" font="0" text="U-StreamBox" number="5" multilang="0" storagemethod="0"/>
+    <label Xpos="0" Ypos="54" font="0" text="TIME" number="6" multilang="0" storagemethod="1"/>
+    <label Xpos="78" Ypos="54" font="0" text="0.1.23alpha" number="7" multilang="0" storagemethod="0"/>
+  </window>
+  <window number="2" focusNextKey="97" focusPrevKey="115" focusEnterKey="13">
+    <label Xpos="9" Ypos="0" font="0" text="U-Stream  by  Dirk  Broßwick" number="1" multilang="0" storagemethod="0"/>
+    <label Xpos="26" Ypos="10" font="0" text="based  on  OpenMCP" number="2" multilang="0" storagemethod="0"/>
+    <label Xpos="47" Ypos="20" font="0" text="GPLv2" number="3" multilang="0" storagemethod="0"/>
+    <label Xpos="5" Ypos="31" font="0" text="http://wiki.neo-guerillaz.de" number="5" multilang="0" storagemethod="0"/>
+    <button Xpos="46" Ypos="49" font="0" text="      back" Xsize="33" Ysize="11" action="" number="4" screen="window 1" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+  </window>
+  <window number="4" focusNextKey="97" focusPrevKey="115" focusEnterKey="13">
+    <label Xpos="50" Ypos="3" font="0" text="Stream" number="5" multilang="0" storagemethod="0"/>
+    <button Xpos="11" Ypos="18" font="0" text="PlayList" Xsize="49" Ysize="11" action="STREAM_PLAYLIST" number="1" screen="window 13" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+    <button Xpos="67" Ypos="18" font="0" text="Replay" Xsize="49" Ysize="11" action="STREAM_REPLAY" number="2" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <button Xpos="11" Ypos="33" font="0" text="Stop" Xsize="49" Ysize="11" action="STREAM_STOP" number="3" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+    <button Xpos="67" Ypos="33" font="0" text="Info" Xsize="49" Ysize="11" action="STREAM_INFO" number="4" screen="window 17" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <button Xpos="11" Ypos="47" font="0" text="PlayURL" Xsize="49" Ysize="11" action="STREAM_PLAY_URL" number="6" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <button Xpos="67" Ypos="47" font="0" text="back" Xsize="49" Ysize="11" action="" number="7" screen="window 1" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+  </window>
+  <window number="5" focusNextKey="97" focusPrevKey="115" focusEnterKey="13">
+    <button Xpos="11" Ypos="18" font="0" text="Display" Xsize="49" Ysize="11" action="CONF_DISPLAY" number="1" screen="window 6" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <button Xpos="67" Ypos="18" font="0" text="Netzwerk" Xsize="49" Ysize="11" action="CONF_NET" number="2" screen="window 8" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <button Xpos="11" Ypos="33" font="0" text="Streaming" Xsize="49" Ysize="11" action="CONF_STREAM" number="3" screen="window 7" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+    <button Xpos="67" Ypos="33" font="0" text="Audio" Xsize="49" Ysize="11" action="" number="6" screen="window 9" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <button Xpos="11" Ypos="47" font="0" text="save all" Xsize="49" Ysize="11" action="" number="7" screen="subwindow 16" focusable="-1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+    <button Xpos="67" Ypos="47" font="0" text="back" Xsize="49" Ysize="11" action="" number="4" screen="window 1" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+    <label Xpos="52" Ypos="3" font="0" text="Setup" number="5" multilang="0" storagemethod="0"/>
+  </window>
+  <window number="6" focusNextKey="97" focusPrevKey="115" focusEnterKey="13">
+    <label Xpos="47" Ypos="3" font="0" text="Display" number="1" multilang="0" storagemethod="0"/>
+    <checkbox Xpos="11" Ypos="16" font="0" text="    dim  on  idle" Xsize="9" Ysize="9" action="" number="4" screen="" checkname="DIMIDLE" focusable="1" fontfocus="0" multilang="0" rectangle="0" storagemethod="0"/>
+    <button Xpos="11" Ypos="27" font="0" text="BACKLIGHT" Xsize="23" Ysize="11" action="BACKLIGHT" number="7" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="1"/>
+    <label Xpos="36" Ypos="29" font="0" text="backlight" number="8" multilang="0" storagemethod="0"/>
+    <button Xpos="11" Ypos="39" font="0" text="CONTRAST" Xsize="23" Ysize="11" action="CONTRAST" number="5" screen="" focusable="-1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="1"/>
+    <label Xpos="36" Ypos="41" font="0" text="contrast" number="6" multilang="0" storagemethod="0"/>
+    <button Xpos="11" Ypos="51" font="0" text="back" Xsize="49" Ysize="11" action="" number="3" screen="window 5" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+  </window>
+  <window number="7" focusNextKey="97" focusPrevKey="115" focusEnterKey="13">
+    <label Xpos="41" Ypos="3" font="0" text="streaming" number="1" multilang="0" storagemethod="0"/>
+    <checkbox Xpos="6" Ypos="18" font="0" text="disable  TCP  when  UDP" Xsize="20" Ysize="9" action="" number="2" screen="" checkname="TCPUDP" focusable="1" fontfocus="0" multilang="0" rectangle="0" storagemethod="0"/>
+    <checkbox Xpos="6" Ypos="28" font="0" text="play  last  station  on  boot" Xsize="20" Ysize="9" action="AUTOPLAY" number="4" screen="" checkname="AUTOPLAY" focusable="1" fontfocus="0" multilang="0" rectangle="0" storagemethod="0"/>
+    <checkbox Xpos="6" Ypos="38" font="0" text="restart  broken  stream" Xsize="20" Ysize="9" action="" number="5" screen="" checkname="RESTARTBROKEN" focusable="1" fontfocus="0" multilang="0" rectangle="0" storagemethod="0"/>
+    <button Xpos="6" Ypos="51" font="0" text="back" Xsize="49" Ysize="11" action="" number="3" screen="window 5" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+  </window>
+  <window number="8" focusNextKey="97" focusPrevKey="115" focusEnterKey="13">
+    <label Xpos="47" Ypos="3" font="0" text="Netzwerk" number="3" multilang="0" storagemethod="0"/>
+    <checkbox Xpos="11" Ypos="13" font="0" text="DHCP" Xsize="20" Ysize="9" action="DHCP" number="2" screen="" checkname="DHCP" focusable="1" fontfocus="0" multilang="0" rectangle="0" storagemethod="0"/>
+    <checkbox Xpos="11" Ypos="22" font="0" text="SNTP" Xsize="20" Ysize="9" action="SNTP" number="4" screen="" checkname="SNTP" focusable="1" fontfocus="0" multilang="0" rectangle="0" storagemethod="0"/>
+    <checkbox Xpos="11" Ypos="31" font="0" text="TFTP" Xsize="20" Ysize="9" action="TFTP" number="5" screen="" checkname="TFTP" focusable="1" fontfocus="0" multilang="0" rectangle="0" storagemethod="0"/>
+    <checkbox Xpos="11" Ypos="40" font="0" text="HTTP" Xsize="20" Ysize="9" action="" number="6" screen="" checkname="HTTP" focusable="1" fontfocus="0" multilang="0" rectangle="0" storagemethod="0"/>
+    <checkbox Xpos="67" Ypos="13" font="0" text="annonce" Xsize="20" Ysize="9" action="" number="7" screen="" checkname="ANNONCE" focusable="1" fontfocus="0" multilang="0" rectangle="0" storagemethod="0"/>
+    <button Xpos="67" Ypos="25" font="0" text="set static IP" Xsize="52" Ysize="11" action="" number="8" screen="window 15" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+    <button Xpos="67" Ypos="39" font="0" text="show conf" Xsize="52" Ysize="11" action="" number="9" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <button Xpos="11" Ypos="52" font="0" text="back" Xsize="49" Ysize="11" action="" number="1" screen="window 5" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+  </window>
+  <window number="9" focusNextKey="97" focusPrevKey="115" focusEnterKey="13">
+    <label Xpos="50" Ypos="3" font="0" text="Audio" number="1" multilang="0" storagemethod="0"/>
+    <checkbox Xpos="11" Ypos="16" font="0" text="bass  enhancement" Xsize="20" Ysize="9" action="BASS" number="2" screen="" checkname="BASS" focusable="-1" fontfocus="0" multilang="0" rectangle="0" storagemethod="0"/>
+    <checkbox Xpos="11" Ypos="27" font="0" text="treble  enhancement" Xsize="20" Ysize="9" action="TREBLE" number="3" screen="" checkname="TREBLE" focusable="1" fontfocus="0" multilang="0" rectangle="0" storagemethod="0"/>
+    <checkbox Xpos="11" Ypos="38" font="0" text="autosave  volume" Xsize="20" Ysize="9" action="" number="5" screen="" checkname="AUTOVOLUME" focusable="1" fontfocus="0" multilang="0" rectangle="0" storagemethod="0"/>
+    <button Xpos="11" Ypos="50" font="0" text="back" Xsize="47" Ysize="11" action="" number="4" screen="window 5" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+  </window>
+  <window number="12" focusNextKey="0" focusPrevKey="0" focusEnterKey="0">
+    <label Xpos="3" Ypos="3" font="0" text="TITLE" number="1" multilang="0" storagemethod="1"/>
+  </window>
+  <window number="13" focusNextKey="0" focusPrevKey="0" focusEnterKey="13">
+    <label Xpos="47" Ypos="1" font="0" text="Playlist" number="2" multilang="0" storagemethod="0"/>
+    <list Xpos="3" Ypos="14" font="0" text="PLAYLIST" Xsize="122" Ysize="45" upkey="115" action="" number="1" screen="subwindow 14" downkey="97" checkname="PLAYLIST" focusable="-1" fontfocus="2" multilang="0" pageupkey="0" rectangle="0" pagedownkey="0" storagemethod="1"/>
+  </window>
+  <subwindow Xpos="6" Ypos="16" Xsize="117" Ysize="30" number="14" focusNextKey="97" focusPrevKey="115" focusEnterKey="13">
+    <button Xpos="10" Ypos="25" font="0" text="Play" Xsize="33" Ysize="11" action="PLAYLIST" number="1" screen="RET" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+    <button Xpos="47" Ypos="25" font="0" text="exit" Xsize="33" Ysize="11" action="" number="2" screen="window 4" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <button Xpos="85" Ypos="25" font="0" text="back" Xsize="33" Ysize="11" action="" number="3" screen="RET" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+  </subwindow>
+  <window number="15" focusNextKey="97" focusPrevKey="115" focusEnterKey="13">
+    <label Xpos="45" Ypos="1" font="0" text="Netzwerk" number="1" multilang="0" storagemethod="0"/>
+    <label Xpos="3" Ypos="14" font="0" text="IP" number="2" multilang="0" storagemethod="0"/>
+    <button Xpos="21" Ypos="12" font="0" text="IP24" Xsize="23" Ysize="11" action="IP24" number="3" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <button Xpos="47" Ypos="12" font="0" text="IP16" Xsize="23" Ysize="11" action="IP16" number="4" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <button Xpos="73" Ypos="12" font="0" text="IP8" Xsize="23" Ysize="11" action="IP8" number="5" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <button Xpos="99" Ypos="12" font="0" text="IP0" Xsize="23" Ysize="11" action="IP0" number="6" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <label Xpos="3" Ypos="26" font="0" text="Mask" number="7" multilang="0" storagemethod="0"/>
+    <button Xpos="35" Ypos="24" font="0" text="MASK" Xsize="20" Ysize="11" action="MASK" number="8" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <label Xpos="3" Ypos="38" font="0" text="GW" number="9" multilang="0" storagemethod="0"/>
+    <button Xpos="21" Ypos="36" font="0" text="GW24" Xsize="23" Ysize="11" action="GW24" number="10" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <button Xpos="47" Ypos="36" font="0" text="GW16" Xsize="23" Ysize="11" action="GW16" number="11" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <button Xpos="73" Ypos="36" font="0" text="GW8" Xsize="23" Ysize="11" action="GW8" number="12" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <button Xpos="99" Ypos="36" font="0" text="GW0" Xsize="23" Ysize="11" action="GW0" number="13" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <label Xpos="3" Ypos="50" font="0" text="DNS" number="14" multilang="0" storagemethod="0"/>
+    <button Xpos="21" Ypos="48" font="0" text="DNS24" Xsize="23" Ysize="11" action="DNS24" number="15" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <button Xpos="47" Ypos="48" font="0" text="DNS16" Xsize="23" Ysize="11" action="DNS16" number="16" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <button Xpos="73" Ypos="48" font="0" text="DNS8" Xsize="23" Ysize="11" action="DNS8" number="17" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <button Xpos="99" Ypos="48" font="0" text="DNS0" Xsize="23" Ysize="11" action="DNS0" number="18" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <button Xpos="0" Ypos="0" font="0" text="back" Xsize="23" Ysize="11" action="" number="19" screen="window 8" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+  </window>
+  <subwindow Xpos="6" Ypos="16" Xsize="117" Ysize="30" number="16" focusNextKey="0" focusPrevKey="0" focusEnterKey="13">
+    <label Xpos="14" Ypos="26" font="0" text="save settings" number="1" multilang="0" storagemethod="0"/>
+    <button Xpos="91" Ypos="24" font="0" text="ok" Xsize="20" Ysize="12" action="SAVE_SETTINGS" number="2" screen="RET" focusable="-1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+  </subwindow>
+  <window number="17" focusNextKey="0" focusPrevKey="0" focusEnterKey="13">
+    <button Xpos="100" Ypos="52" font="0" text="back" Xsize="27" Ysize="11" action="" number="1" screen="window 4" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+    <label Xpos="0" Ypos="0" font="0" text="bandwidth:" number="2" multilang="0" storagemethod="0"/>
+    <label Xpos="0" Ypos="11" font="0" text="protocol:" number="3" multilang="0" storagemethod="0"/>
+    <label Xpos="0" Ypos="22" font="0" text="source:" number="4" multilang="0" storagemethod="0"/>
+    <label Xpos="0" Ypos="33" font="0" text="fps:" number="5" multilang="0" storagemethod="0"/>
+    <label Xpos="0" Ypos="55" font="0" text="buffer:" number="10" multilang="0" storagemethod="0"/>
+    <label Xpos="0" Ypos="44" font="0" text="data:" number="12" multilang="0" storagemethod="0"/>
+    <label Xpos="47" Ypos="0" font="0" text="BANDWIDTH" number="6" multilang="0" storagemethod="1"/>
+    <label Xpos="47" Ypos="11" font="0" text="PROTO" number="7" multilang="0" storagemethod="1"/>
+    <label Xpos="47" Ypos="22" font="0" text="SOURCE" number="8" multilang="0" storagemethod="1"/>
+    <label Xpos="47" Ypos="33" font="0" text="FPS" number="9" multilang="0" storagemethod="1"/>
+    <label Xpos="47" Ypos="44" font="0" text="BYTECOUNTER" number="13" multilang="0" storagemethod="1"/>
+    <label Xpos="47" Ypos="55" font="0" text="BUFFER" number="11" multilang="0" storagemethod="1"/>
+  </window>
+  <window number="18" focusNextKey="97" focusPrevKey="115" focusEnterKey="13">
+    <button Xpos="11" Ypos="18" font="0" text="reset" Xsize="49" Ysize="11" action="RESET" number="1" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <button Xpos="67" Ypos="18" font="0" text="alarm clock" Xsize="49" Ysize="11" action="CLOCK" number="2" screen="window 19" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="0"/>
+    <button Xpos="11" Ypos="33" font="0" text="games" Xsize="49" Ysize="11" action="GAMES" number="3" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+    <button Xpos="67" Ypos="33" font="0" text="back" Xsize="49" Ysize="11" action="" number="4" screen="window 1" focusable="-1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+    <label Xpos="52" Ypos="3" font="0" text="tools" number="5" multilang="0" storagemethod="0"/>
+  </window>
+  <window number="19" focusNextKey="97" focusPrevKey="115" focusEnterKey="13">
+    <label Xpos="43" Ypos="3" font="0" text="alarm clock" number="7" multilang="0" storagemethod="0"/>
+    <label Xpos="63" Ypos="20" font="0" text=":" number="5" multilang="0" storagemethod="0"/>
+    <button Xpos="39" Ypos="18" font="0" text="ALARM_HH" Xsize="21" Ysize="11" action="" number="3" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="1"/>
+    <button Xpos="68" Ypos="18" font="0" text="ARLAM_MM" Xsize="21" Ysize="11" action="" number="4" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="1" storagemethod="1"/>
+    <checkbox Xpos="44" Ypos="33" font="0" text="    enable" Xsize="9" Ysize="9" action="" number="6" screen="" checkname="ALARM_ENABLE" focusable="1" fontfocus="0" multilang="0" rectangle="0" storagemethod="0"/>
+    <button Xpos="11" Ypos="47" font="0" text="      abort" Xsize="49" Ysize="11" action="" number="1" screen="window 18" focusable="-1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+    <button Xpos="68" Ypos="47" font="0" text="       save" Xsize="49" Ysize="11" action="" number="2" screen="" focusable="1" fontfocus="0" multilang="0" rectangle="-1" storagemethod="0"/>
+  </window>
+</MenuConfig>

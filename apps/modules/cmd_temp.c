@@ -1,0 +1,135 @@
+/***************************************************************************
+ *            cmd_temp.c
+ *
+ *  Thu Nov  5 17:02:56 2009
+ *  Copyright  2009  Dirk Broßwick
+ *  <sharandac@snafu.de>
+ ****************************************************************************/
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Library General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
+ */
+
+/**
+ * \ingroup modules
+ * \addtogroup cmd_temp Shell- und CGI-Interface um Tempsensoren auszulesen (cmd_temp.c)
+ *
+ * @{
+ */
+
+/**
+ *
+ * \author Dirk Broßwick
+ *
+ */
+ 
+#include <avr/pgmspace.h>
+#include <avr/version.h>
+#include <avr/eeprom.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
+
+#include "config.h"
+
+#include "apps/httpd/cgibin/cgi-bin.h"
+#include "apps/httpd/httpd2.h"
+#include "apps/httpd/httpd2_pharse.h"
+#include "system/shell/shell.h"
+#include "system/sensor/temp.h"
+
+#include "cmd_temp.h"
+
+/*------------------------------------------------------------------------------------------------------------*/
+/*!\brief Registriert das Shell-Interface für Tempsensoren.
+ * \param 	NONE
+ * \return	NONE
+ */
+/*------------------------------------------------------------------------------------------------------------*/
+void init_cmd_temp( void )
+{
+#if defined(SHELL)
+	SHELL_RegisterCMD( cmd_temp, PSTR("temp"));
+#endif
+#if defined(HTTPSERVER)
+	cgi_RegisterCGI( cgi_temp, PSTR("temp.xml"));
+#endif
+}
+
+/*------------------------------------------------------------------------------------------------------------*/
+/*!\brief Das Shell-Interface zum auslesen der Tempsensoren.
+ * \param 	pStruct	Struktur auf den HTTP_Request
+ * \return	NONE
+ */
+/*------------------------------------------------------------------------------------------------------------*/
+int cmd_temp( int argc, char ** argv )
+{		
+	int Temp;
+	char TempString[10];
+
+	if ( argc == 2 )
+	{
+		Temp = TEMP_readtempstr( argv[ 1 ] );
+
+		TEMP_Temp2String( Temp, TempString );
+		printf_P( PSTR("%s\r\n"), TempString );
+
+	}
+	return(0);
+}
+
+/*------------------------------------------------------------------------------------------------------------*/
+/*!\brief Das CGI-Interface zum auslesen der Tempsensoren.
+ * \param 	pStruct	Struktur auf den HTTP_Request
+ * \return	NONE
+ */
+/*------------------------------------------------------------------------------------------------------------*/
+void cgi_temp( void * pStruct )
+{	
+	int i = 0;
+	char tempstring[16];
+	char * sensorname , sensorconfig[64];
+
+	printf_P( PSTR("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r<current>\r"));
+	
+	for ( i = 0 ; i < TEMP_MAX_SENSORS ; i ++ )
+	{
+		// Configstring und Temperatur holen
+		if ( TEMP_getSensorConfig( i, sensorconfig ) != NULL )
+		{
+			TEMP_Sensor2String( i , tempstring );
+
+			// Configstring zerlegen um die Beschreibung zu bekommen
+			sensorname = sensorconfig;	
+			sensorname = sensorname + strlen( sensorname ) -1 ;
+			
+			while( *sensorname != ';' )
+				sensorname--;
+			sensorname++;
+
+			printf_P( PSTR( " <temp>\r"
+			           		"  <title>%s</title>\r"
+			           		"  <value>%s</value>\r"
+			           		" </temp>\r"), sensorname, tempstring );
+		}
+	}
+
+	printf_P( PSTR("</current>\r"));
+}
+
+/**
+ * @}
+ */
+
