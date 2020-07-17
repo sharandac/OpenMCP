@@ -94,7 +94,8 @@ void icmp( int packet_lenght, char *buffer)
 										ETH_packet->ETH_sourceMac[i] = mymac[i];
 									}
 									// und ab die post
-									sendEthernetframe( packet_lenght, buffer); // packet_lenght - 4 weil der Controller die checksumme selber berechnet
+									// 20200715 dl6lr comment was right, code was wrong, do not copy checksum of received frame
+									sendEthernetframe( packet_lenght - 4, buffer); // packet_lenght - 4 weil der Controller die checksumme selber berechnet
 									break;
 		case ICMP_EchoReplay:		if ( ICMP_packet->ICMP_Identifierer == 0xac1d && ICMP_Replaystate == ICMP_WaitForReplay )
 										ICMP_Replaystate = ICMP_ReplayOkay;

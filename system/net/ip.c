@@ -78,8 +78,9 @@ void ip( int packet_lenght ,  char *buffer )
 											// checke mal ob dat Ã¼berhaupt fÃ¼r uns ist
 		// if ( IP_packet->IP_DestinationIP != myIP || IP_packet->IP_DestinationIP != 0xffffffff ) return;
 
-//		if ( ( IP_packet->IP_Flags_Fragmentoffset & htons( FRAGMENTOFFSET_bm ) ) == 0 )
-//		{
+		// 20200715 dl6lr just discard fragment frames, as they are not being reassembled
+		if ( ( IP_packet->IP_Flags_Fragmentoffset & htons( FRAGMENTOFFSET_bm ) ) == 0 )
+		{
 			switch ( IP_packet->IP_Protocol )
 			{
 				case 0x01:			if ( IP_packet->IP_DestinationIP != myIP ) return;
@@ -96,7 +97,7 @@ void ip( int packet_lenght ,  char *buffer )
 #endif
 				default:			break;
 			}
-//		}
+		}
 	}
 
 /* -----------------------------------------------------------------------------------------------------------*/
